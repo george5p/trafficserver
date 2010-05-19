@@ -2328,11 +2328,11 @@ INKReadFromUrlEx(const char *url, char **header, int *headerSize, char **body, i
 
   /* sending the HTTP request via the established socket */
   snprintf(request, BUFSIZE, "http://%s:%d/%s", httpHost, httpPort, httpPath);
-  if ((status = sendHTTPRequest(hFD, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((status = sendHTTPRequest(hFD, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(buffer, 0, bufsize);   /* empty the buffer */
-  if ((status = readHTTPResponse(hFD, buffer, bufsize, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((status = readHTTPResponse(hFD, buffer, bufsize, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((status = parseHTTPResponse(buffer, &hdr_temp, headerSize, &bdy_temp, bodySize))
@@ -2375,11 +2375,11 @@ INKLookupFromCacheUrl(INKString url, INKString * info)
     goto END;
   }
   snprintf(request, BUFSIZE, "http://{cache}/lookup_url?url=%s", url);
-  if ((err = sendHTTPRequest(fd, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = sendHTTPRequest(fd, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(response, 0, URL_BUFSIZE);
-  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((err = parseHTTPResponse(response, &header, &hdr_size, &body, &bdy_size)) != INK_ERR_OKAY)
@@ -2413,11 +2413,11 @@ INKLookupFromCacheUrlRegex(INKString url_regex, INKString * list)
     goto END;
   }
   snprintf(request, BUFSIZE, "http://{cache}/lookup_regex?url=%s", url_regex);
-  if ((err = sendHTTPRequest(fd, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = sendHTTPRequest(fd, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(response, 0, URL_BUFSIZE);
-  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((err = parseHTTPResponse(response, &header, &hdr_size, &body, &bdy_size)) != INK_ERR_OKAY)
@@ -2450,11 +2450,11 @@ INKDeleteFromCacheUrl(INKString url, INKString * info)
     goto END;
   }
   snprintf(request, BUFSIZE, "http://{cache}/delete_url?url=%s", url);
-  if ((err = sendHTTPRequest(fd, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = sendHTTPRequest(fd, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(response, 0, URL_BUFSIZE);
-  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((err = parseHTTPResponse(response, &header, &hdr_size, &body, &bdy_size)) != INK_ERR_OKAY)
@@ -2488,11 +2488,11 @@ INKDeleteFromCacheUrlRegex(INKString url_regex, INKString * list)
     goto END;
   }
   snprintf(request, BUFSIZE, "http://{cache}/delete_regex?url=%s", url_regex);
-  if ((err = sendHTTPRequest(fd, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = sendHTTPRequest(fd, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(response, 0, URL_BUFSIZE);
-  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((err = parseHTTPResponse(response, &header, &hdr_size, &body, &bdy_size)) != INK_ERR_OKAY)
@@ -2525,11 +2525,11 @@ INKInvalidateFromCacheUrlRegex(INKString url_regex, INKString * list)
     goto END;
   }
   snprintf(request, BUFSIZE, "http://{cache}/invalidate_regex?url=%s", url_regex);
-  if ((err = sendHTTPRequest(fd, request, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = sendHTTPRequest(fd, request, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   memset(response, 0, URL_BUFSIZE);
-  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (inku64) timeout)) != INK_ERR_OKAY)
+  if ((err = readHTTPResponse(fd, response, URL_BUFSIZE, (uint64) timeout)) != INK_ERR_OKAY)
     goto END;
 
   if ((err = parseHTTPResponse(response, &header, &hdr_size, &body, &bdy_size)) != INK_ERR_OKAY)
@@ -3326,7 +3326,7 @@ closeAllFds()
   }
 
   if (getuid() == 0 || geteuid() == 0) {        // only if it's successful
-    snprintf(command, sizeof(command), "/bin/ls -1 /proc/%d/fd", getpid());
+    snprintf(command, sizeof(command), "/bin/ls -1 /proc/%lld/fd", (int64)getpid());
     FILE *fd = popen(command, "r");
     if (fd) {
       while (!feof(fd)) {

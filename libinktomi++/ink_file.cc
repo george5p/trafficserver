@@ -32,13 +32,13 @@
 #include "inktomi++.h"
 
 DIR *
-ink_opendir(const char *path)
+opendir(const char *path)
 {
   return opendir(path);
 }
 
 int
-ink_closedir(DIR * d)
+closedir(DIR * d)
 {
   return closedir(d);
 }
@@ -54,7 +54,7 @@ ink_access_extension(char *base, char *ext, int amode)
 }                               /* End ink_access_extension */
 
 int
-ink_readdir_r(DIR * dirp, struct dirent *entry, struct dirent **pentry)
+readdir_r(DIR * dirp, struct dirent *entry, struct dirent **pentry)
 {
 #if (HOST_OS == freebsd)
   // this is safe for threads not accessing the same file
@@ -84,7 +84,7 @@ ink_fopen_extension(char *base, char *ext, char *mode)
   name[sizeof(name) - 1] = 0;
   fp = ink_fopen(name, mode);
   return (fp);
-}                               /* End ink_open_extension */
+}                               /* End open_extension */
 
 
 FILE *

@@ -53,7 +53,7 @@ LocalManager::SetForDup(void *hIOCPort, long lTProcId, void *hTh)
 void
 LocalManager::mgmtCleanup()
 {
-  ink_close_socket(process_server_sockfd);
+  close_socket(process_server_sockfd);
 
   // fix me for librecords
 
@@ -570,11 +570,11 @@ LocalManager::pollMgmtProcessServer()
           memcpy((char *) mh + sizeof(MgmtMessageHdr), &mgmt_sync_key, data_len);
           if (mgmt_write_pipe(new_sockfd, (char *) mh, sizeof(MgmtMessageHdr) + data_len) <= 0) {
             mgmt_elog("[LocalManager::pollMgmtProcessServer] Error writing sync key message!\n");
-            ink_close_socket(new_sockfd);
+            close_socket(new_sockfd);
             watched_process_fd = watched_process_pid = -1;
           }
         } else {
-          ink_close_socket(new_sockfd);
+          close_socket(new_sockfd);
         }
         --num;
       }
@@ -606,7 +606,7 @@ LocalManager::pollMgmtProcessServer()
 
           Debug("lm", "[LocalManager::pollMgmtProcessServer] Lost process EOF!\n");
 
-          ink_close_socket(watched_process_fd);
+          close_socket(watched_process_fd);
 
           waitpid(watched_process_pid, &estatus, 0);    /* Reap child */
           if (WIFSIGNALED(estatus)) {
@@ -864,7 +864,7 @@ LocalManager::sendMgmtMsgToProcesses(MgmtMessageHdr * mh)
       for (int i = 0; i < MAX_PROXY_SERVER_PORTS; i++) {
 
         if (proxy_server_fd[i] != -1) { // Close the socket
-          ink_close_socket(proxy_server_fd[i]);
+          close_socket(proxy_server_fd[i]);
           proxy_server_fd[i] = -1;
         }
       }
@@ -933,7 +933,7 @@ LocalManager::sendMgmtMsgToProcesses(MgmtMessageHdr * mh)
           if ((kill(watched_process_pid, 0) < 0) && (errno == ESRCH)) {
             // TS is down
             pid_t tmp_pid = watched_process_pid;
-            ink_close_socket(watched_process_fd);
+            close_socket(watched_process_fd);
             mgmt_elog(stderr, "[LocalManager::pollMgmtProcessServer] " "Server Process has been terminated\n");
             if (lmgmt->run_proxy) {
               mgmt_elog("[Alarms::signalAlarm] Server Process was reset\n");

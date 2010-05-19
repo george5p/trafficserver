@@ -66,9 +66,9 @@
 #define INK_FILEPATH_TRUENAME       0x20
 
 int ink_access_extension(char *base, char *ext, int amode);
-int ink_readdir_r(DIR * dirp, struct dirent *entry, struct dirent **pentry);
-DIR *ink_opendir(const char *path);
-int ink_closedir(DIR * d);
+int readdir_r(DIR * dirp, struct dirent *entry, struct dirent **pentry);
+DIR *opendir(const char *path);
+int closedir(DIR * d);
 
 FILE *ink_fopen_extension(char *base, char *ext, char *mode);
 FILE *ink_fopen(char *name, char *mode);
